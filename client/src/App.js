@@ -9,6 +9,7 @@ import PvpLeaderboard from "./containers/PvpLeaderboard";
 import { themeHorde, themeAlliance } from "./styles/theme/globalStyle";
 import { ThemeProvider } from "styled-components";
 import setLocalStorageTheme from "./utils";
+import NotFound from "./views/NotFound";
 
 export const faction = {
   horde: "horde",
@@ -65,6 +66,7 @@ class App extends Component {
     setLocalStorageTheme(theme);
     this.setState({ theme });
   };
+
   render() {
     if (Object.keys(this.state.theme).length === 0) {
       return null;
@@ -89,21 +91,24 @@ class App extends Component {
                       render={() => <Home selectTheme={this.selectTheme} />}
                     />
                     <Route
-                      path="/hauts-faits-donjon"
+                      path="/dungeon-achievements"
                       render={() => (
                         <DungeonsAchievements toggleTheme={this.toggleTheme} />
                       )}
                     />
                     <Route
-                      path="/hauts-faits-raid"
+                      path="/raid-achievements"
                       render={() => (
                         <RaidsAchievements toggleTheme={this.toggleTheme} />
                       )}
                     />
                     <Route
-                      path="/hauts-faits-pvp"
-                      render={() => <PvpLeaderboard />}
+                      path="/pvp-leaderboard"
+                      render={() => (
+                        <PvpLeaderboard toggleTheme={this.toggleTheme} />
+                      )}
                     />
+                    <Route component={NotFound} />
                   </Switch>
                 </WrapperSwitch>
               </CSSTransition>

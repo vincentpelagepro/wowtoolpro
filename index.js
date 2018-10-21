@@ -24,8 +24,8 @@ const app = express();
 app.enable("trust proxy");
 
 const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 50
+  windowMs: 1 * 60 * 1000,
+  max: 50
 });
 
 app.use(limiter);
@@ -97,7 +97,7 @@ async function saveData(ladder, server, response, playersCount, dataToSave) {
       classList
     );
     const arenaSpecStats = await getSpecStats(response, playersCount, specList);
-    const arenaType = ladder + "stats";
+    const arenaType = ladder;
     dataToSave[server] = {};
     dataToSave[server][arenaType] = {};
     dataToSave[server][arenaType]["class"] = arenaClassStats;
@@ -126,11 +126,13 @@ const getLeaderBoards = (ladder, server) => {
       ladder +
       "?locale=en_GB&apikey=" +
       process.env.WOW_API_KEY;
-  } else if(server === "us") {
+  } else if (server === "us") {
     endpoint =
       "https://" +
       server +
-      ".api.battle.net/wow/leaderboard/2v2?locale=en_US&apikey=" +
+      ".api.battle.net/wow/leaderboard/" +
+      ladder +
+      "?locale=en_US&apikey=" +
       process.env.WOW_API_KEY;
   }
   axios
@@ -148,29 +150,29 @@ const getLeaderBoards = (ladder, server) => {
     });
 };
 
-// const scheduled = schedule.scheduleJob("45 * * * * *", function() {
-//   console.log("Scheduled job started");
-//   const mongoDB = `mongodb://vincent:${
-//     process.env.DB_PASS
-//   }@ds125713.mlab.com:25713/wow-api`;
-//   mongoose.connect(
-//     mongoDB,
-//     { useNewUrlParser: true }
-//   );
-//   const db = mongoose.connection;
-//   db.on("error", console.error.bind(console, "mongoDB connection error: "));
-//   db.once("open", () => {
-//     console.log("Connected to the DB");
-//     db.collection("pvpleaderboards").deleteMany({});
-//     console.log("Previous documents deleted");
-//     getLeaderBoards("2v2", "eu");
-//     getLeaderBoards("3v3", "eu");
-//     getLeaderBoards("rbg", "eu");
-//     getLeaderBoards("2v2", "us");
-//     getLeaderBoards("3v3", "us");
-//     getLeaderBoards("rbg", "us");
-//   });
-// });
+const scheduled = schedule.scheduleJob("* 1 0 * * *", function() {
+  console.log("Scheduled job started");
+  const mongoDB = `mongodb://vincent:${
+    process.env.DB_PASS
+  }@ds125713.mlab.com:25713/wow-api`;
+  mongoose.connect(
+    mongoDB,
+    { useNewUrlParser: true }
+  );
+  const db = mongoose.connection;
+  db.on("error", console.error.bind(console, "mongoDB connection error: "));
+  db.once("open", () => {
+    console.log("Connected to the DB");
+    db.collection("pvpleaderboards").deleteMany({});
+    console.log("Previous documents deleted");
+    getLeaderBoards("2v2", "eu");
+    getLeaderBoards("3v3", "eu");
+    getLeaderBoards("rbg", "eu");
+    getLeaderBoards("2v2", "us");
+    getLeaderBoards("3v3", "us");
+    getLeaderBoards("rbg", "us");
+  });
+});
 
 app.use("/dungeonsAchievements", formValidator);
 app.use("/raidsAchievements", formValidator);

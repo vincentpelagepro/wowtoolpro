@@ -107,7 +107,6 @@ export const getButtonStateBannerStyles = props => {
     transition: none;
     letter-spacing: 1px;
     position: relative;
-
     &::after {
       content: "";
       position: absolute;

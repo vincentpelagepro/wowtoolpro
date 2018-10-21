@@ -33,6 +33,7 @@ const WrapperForm = styled.div`
 `;
 
 const WrapperInput = styled.div`
+  flex: 1 0 auto;
   margin: 0 0 16px 0;
   @media (min-width: ${global.minTablet}) {
     margin: 0 16px 0 0;
@@ -53,11 +54,9 @@ const Search = styled.span`
 
 class RaidsAchievements extends React.Component {
   state = {
-    // characterName: "",
-    // characterKingdom: "",
-    // characterRegion: "",
     errorMessage: "",
-    isErrorDisplay: false
+    isErrorDisplay: false,
+    animateResult: false
   };
 
   componentDidUpdate(prevProps) {
@@ -159,6 +158,11 @@ class RaidsAchievements extends React.Component {
   render() {
     const { toggleTheme, raidsAchievements } = this.props;
     const { errorMessage, isErrorDisplay, animateResult } = this.state;
+    const isDataReceived =
+      !isErrorDisplay &&
+      raidsAchievements.data &&
+      !raidsAchievements.data.error &&
+      Object.keys(raidsAchievements.data).length > 0;
 
     const {
       characterName,
@@ -166,15 +170,23 @@ class RaidsAchievements extends React.Component {
       characterRegion
     } = this.props.form;
 
-    const characterKingdomOption = {
-      value: characterKingdom,
-      label: characterKingdom
-    };
+    let characterKingdomOption = null;
 
-    const characterRegionOption = {
-      value: characterRegion,
-      label: characterRegion
-    };
+    if (characterKingdom !== "") {
+      characterKingdomOption = {
+        value: characterKingdom,
+        label: characterKingdom
+      };
+    }
+
+    let characterRegionOption = null;
+
+    if (characterRegion !== "") {
+      characterRegionOption = {
+        value: characterRegion,
+        label: characterRegion
+      };
+    }
 
     return (
       <React.Fragment>
@@ -187,14 +199,8 @@ class RaidsAchievements extends React.Component {
 
         <Nav toggleTheme={toggleTheme} />
         <Banner
-          title="Raid Achievements"
-          isResultActive={
-            raidsAchievements.data &&
-            !isErrorDisplay &&
-            !raidsAchievements.data.error
-              ? true
-              : false
-          }
+          title="raid achievements"
+          isResultActive={isDataReceived ? true : false}
         >
           <WrapperForm>
             <WrapperInput>
@@ -211,7 +217,7 @@ class RaidsAchievements extends React.Component {
                 onChange={this.handleSelectChange}
                 options={optionsKingdom}
                 placeholder="Kingdom"
-                className="react-select-container"
+                className="react-select-container select-kingdom"
                 classNamePrefix="react-select"
                 value={characterKingdomOption}
               />
@@ -221,7 +227,7 @@ class RaidsAchievements extends React.Component {
                 onChange={this.handleSelectRegionChange}
                 options={optionsRegions}
                 placeholder="Region"
-                className="react-select-container"
+                className="react-select-container select-region"
                 classNamePrefix="react-select"
                 value={characterRegionOption}
               />
@@ -238,25 +244,14 @@ class RaidsAchievements extends React.Component {
           </WrapperForm>
         </Banner>
 
-        {!isErrorDisplay &&
-          raidsAchievements.data &&
-          !raidsAchievements.data.error &&
-          Object.keys(raidsAchievements.data).length > 0 && (
-            <ResultContainer
-              isResultActive={
-                raidsAchievements.data &&
-                !isErrorDisplay &&
-                !raidsAchievements.data.error
-                  ? true
-                  : false
-              }
-            >
-              <ResultRaid
-                data={raidsAchievements.data}
-                animateResult={animateResult}
-              />
-            </ResultContainer>
-          )}
+        {isDataReceived && (
+          <ResultContainer isResultActive={isDataReceived ? true : false}>
+            <ResultRaid
+              data={raidsAchievements.data}
+              animateResult={animateResult}
+            />
+          </ResultContainer>
+        )}
       </React.Fragment>
     );
   }

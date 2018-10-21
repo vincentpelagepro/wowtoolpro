@@ -1,10 +1,11 @@
 import { injectGlobal } from "styled-components";
 import LifeCraftFont from "../../assets/fonts/LifeCraftFont.ttf";
-import Sylvanas from "../../assets/images/sylvanas.jpg";
-import Anduin from "../../assets/images/anduin.jpg";
+import Sylvanas from "../../assets/images/sylvanas-opt.jpg";
+import Anduin from "../../assets/images/anduin-opt.jpg";
 
 export const global = {
   borderRadius: "3px",
+  borderWidth: "2px",
   maxMobile: "767px",
   minTablet: "768px",
   maxTablet: "1023px",
@@ -16,6 +17,7 @@ export const themeHorde = {
   light: "#6C0E16",
   medium: "#590612",
   dark: "#38040E",
+  flash: "#BB9457",
   image: Sylvanas
 };
 
@@ -23,6 +25,7 @@ export const themeAlliance = {
   light: "#1F2C5D",
   medium: "#1B264F",
   dark: "#131B39",
+  flash: "#DB9D47",
   image: Anduin
 };
 
@@ -38,7 +41,7 @@ injectGlobal`
     margin: 0;
     font-family: sans-serif;
   }
-  p, a, input, span {
+  p, a, input, span, label {
     font-family: Roboto, sans-serif;
     font-weight: 300;
     margin: 0;
@@ -60,6 +63,7 @@ injectGlobal`
     font-size: 45px;
     margin: 0;
     letter-spacing: 3px;
+    padding: 0 16px;
     @media (min-width: ${global.minTablet}) {
       font-size: 55px;
     }

@@ -25,20 +25,28 @@ const WrapperResultRaid = styled.div`
   }
 
   @media (min-width: ${global.minTablet}) {
-    width: 75%;
+    max-width: 1092px;
     flex-direction: row;
   }
 `;
 
-const WrapperCard = styled.div`
-  flex: 0 1 40%;
+const WrapperCol = styled.div`
+  flex: 1 1 50%;
+  @media (min-width: ${global.minTablet}) {
+    margin: 0 24px 24px 24px;
+  }
 `;
+
+const WrapperCard = styled.div`
+  margin-bottom: 20px;
+`;
+
 const Title = styled.h2`
   color: #fff;
   padding: 10px;
   background-color: transparent;
   display: inline-block;
-  margin: 10px;
+  margin-bottom: 24px;
   border: 1px solid;
   border-radius: 3px;
   text-transform: uppercase;
@@ -51,6 +59,7 @@ const CardTitle = styled.p`
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-weight: 400;
+
   @media (min-width: ${global.minTablet}) {
     font-size: 14px;
   }
@@ -63,7 +72,7 @@ const CardDescription = styled.p`
 `;
 
 const Tag = styled.span`
-  background-color: ${props => props.theme.light};
+  background-color: ${props => props.theme.flash};
   color: white;
   font-size: 11px;
   padding: 4px 8px;
@@ -86,36 +95,32 @@ const ResultRaid = ({ data, animateResult, children }) => {
     >
       {state => (
         <WrapperResultRaid>
-          <WrapperCard>
-            {data &&
-              Object.keys(data).length > 0 && (
-                <div>
-                  <Title>Heroic Raids</Title>
-                  {dataRaidHeroic.map((raidHeroic, id) => (
-                    <Card key={id} isDone={raidHeroic.done}>
-                      {raidHeroic.done ? <Tag>done</Tag> : null}
-                      <CardTitle>{raidHeroic.name}</CardTitle>
-                      <CardDescription>{raidHeroic.desc}</CardDescription>
-                    </Card>
-                  ))}
-                </div>
-              )}
-          </WrapperCard>
-          <WrapperCard>
-            {data &&
-              Object.keys(data).length > 0 && (
-                <div>
-                  <Title>Mythical Raids</Title>
-                  {dataRaidMythic.map((raidMytic, id) => (
-                    <Card key={id} isDone={raidMytic.done}>
-                      {raidMytic.done ? <Tag>done</Tag> : null}
-                      <CardTitle>{raidMytic.name}</CardTitle>
-                      <CardDescription>{raidMytic.desc}</CardDescription>
-                    </Card>
-                  ))}
-                </div>
-              )}
-          </WrapperCard>
+          <WrapperCol>
+            <Title>Heroic Raids</Title>
+
+            {dataRaidHeroic.map((raidHeroic, id) => (
+              <WrapperCard key={id}>
+                <Card isDone={raidHeroic.done}>
+                  {raidHeroic.done ? <Tag>done</Tag> : null}
+                  <CardTitle>{raidHeroic.name}</CardTitle>
+                  <CardDescription>{raidHeroic.desc}</CardDescription>
+                </Card>
+              </WrapperCard>
+            ))}
+          </WrapperCol>
+          <WrapperCol>
+            <Title>Mythical Raids</Title>
+
+            {dataRaidMythic.map((raidMytic, id) => (
+              <WrapperCard key={id}>
+                <Card isDone={raidMytic.done}>
+                  {raidMytic.done ? <Tag>done</Tag> : null}
+                  <CardTitle>{raidMytic.name}</CardTitle>
+                  <CardDescription>{raidMytic.desc}</CardDescription>
+                </Card>
+              </WrapperCard>
+            ))}
+          </WrapperCol>
         </WrapperResultRaid>
       )}
     </CSSTransition>

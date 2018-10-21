@@ -33,6 +33,7 @@ const WrapperForm = styled.div`
 `;
 
 const WrapperInput = styled.div`
+  flex: 1 0 auto;
   margin: 0 0 16px 0;
   @media (min-width: ${global.minTablet}) {
     margin: 0 16px 0 0;
@@ -53,9 +54,6 @@ const Search = styled.span`
 
 class DungeonsAchievements extends React.Component {
   state = {
-    // characterName: "",
-    // characterKingdom: "",
-    // characterRegion: "",
     errorMessage: "",
     isErrorDisplay: false,
     animateResult: false
@@ -162,6 +160,11 @@ class DungeonsAchievements extends React.Component {
   render() {
     const { toggleTheme, dungeonsAchievements } = this.props;
     const { errorMessage, isErrorDisplay, animateResult } = this.state;
+    const isDataReceived =
+      !isErrorDisplay &&
+      dungeonsAchievements.data &&
+      !dungeonsAchievements.data.error &&
+      Object.keys(dungeonsAchievements.data).length > 0;
 
     const {
       characterName,
@@ -197,14 +200,8 @@ class DungeonsAchievements extends React.Component {
         </ErrorMessage>
         <Nav toggleTheme={toggleTheme} />
         <Banner
-          title="Dungeon Achievements"
-          isResultActive={
-            dungeonsAchievements.data &&
-            !isErrorDisplay &&
-            !dungeonsAchievements.data.error
-              ? true
-              : false
-          }
+          title="dungeon achievements"
+          isResultActive={isDataReceived ? true : false}
         >
           <WrapperForm>
             <WrapperInput>
@@ -248,25 +245,14 @@ class DungeonsAchievements extends React.Component {
           </WrapperForm>
         </Banner>
 
-        {!isErrorDisplay &&
-          dungeonsAchievements.data &&
-          !dungeonsAchievements.data.error &&
-          Object.keys(dungeonsAchievements.data).length > 0 && (
-            <ResultContainer
-              isResultActive={
-                dungeonsAchievements.data &&
-                !isErrorDisplay &&
-                !dungeonsAchievements.data.error
-                  ? true
-                  : false
-              }
-            >
-              <ResultDungeon
-                data={dungeonsAchievements.data}
-                animateResult={animateResult}
-              />
-            </ResultContainer>
-          )}
+        {isDataReceived && (
+          <ResultContainer isResultActive={isDataReceived ? true : false}>
+            <ResultDungeon
+              data={dungeonsAchievements.data}
+              animateResult={animateResult}
+            />
+          </ResultContainer>
+        )}
       </React.Fragment>
     );
   }
